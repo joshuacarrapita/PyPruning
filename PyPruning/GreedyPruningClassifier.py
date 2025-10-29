@@ -3,9 +3,10 @@ import numpy as np
 from sklearn.metrics import roc_auc_score
 
 from joblib import Parallel,delayed
-from sklearn.utils import axis0_safe_slice
+#from sklearn.utils import axis0_safe_slice
 
 from .PruningClassifier import PruningClassifier
+
 def reduced_error(i, ensemble_proba, selected_models, target):
     """
     Computes the error of the sub-ensemble including the i-th classifier.  
