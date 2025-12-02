@@ -16,6 +16,7 @@ def individual_margin_diversity(i, ensemble_proba, target, alpha = 0.2):
     Reference:
         Guo, H., Liu, H., Li, R., Wu, C., Guo, Y., & Xu, M. (2018). Margin & diversity based ordering ensemble pruning. Neurocomputing, 275, 237–246. https://doi.org/10.1016/j.neucom.2017.06.052
     """
+    target = target.astype(int)
     iproba = ensemble_proba[i,:,:]
     n = iproba.shape[0]
 
@@ -63,6 +64,7 @@ def individual_contribution(i, ensemble_proba, target):
     Reference:
         Lu, Z., Wu, X., Zhu, X., & Bongard, J. (2010). Ensemble pruning via individual contribution ordering. Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 871–880. https://doi.org/10.1145/1835804.1835914
     """
+    target = target.astype(int)
     iproba = ensemble_proba[i,:,:]
     n = iproba.shape[0]
 
@@ -128,7 +130,7 @@ def error_ambiguity(i, ensemble_proba, target):
 
     bitmask = np.zeros(A.shape)
     # bitmask[:,target] = 1.0
-    np.put_along_axis(bitmask, target[:,None], 1.0, 1)
+    np.put_along_axis(bitmask, target[:,None].astype(int), 1.0, 1)
     return (bitmask * A + (1.0 - bitmask) * B).sum() + sqdiff.sum()
 
     # for j in range(iproba.shape[0]):

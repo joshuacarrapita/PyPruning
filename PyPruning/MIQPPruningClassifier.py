@@ -335,7 +335,13 @@ class MIQPPruningClassifier(PruningClassifier):
         prob = cp.Problem(cp.Minimize(objective), [
             atoms.affine.sum.sum(w) == self.n_estimators,
         ]) 
-        prob.solve(verbose=self.verbose)
+
+        if 'GUROBI' in cp.installed_solvers():
+            prob.solve(solver=cp.GUROBI, verbose=self.verbose)
+        elif 'GLPK_MI' in cp.installed_solvers():
+            prob.solve(solver=cp.GLPK_MI, verbose=self.verbose)
+        else:
+            prob.solve(verbose=self.verbose)
 
         # Extract the solution
         selected = [i for i in range(n_received) if w.value[i]]

@@ -92,7 +92,7 @@ def largest_mean_distance(X, assignments, target, metric = 'euclidean', n_jobs =
     
     selected_indxed = []
     for c, idx in idx_per_centroid.items():
-        mask = np.ones(all_distances.shape[0], np.bool)
+        mask = np.ones(all_distances.shape[0], dtype=bool)
         mask[idx] = 0
         distances = []
         for i in idx:
