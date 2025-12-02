@@ -4,7 +4,6 @@ from sklearn import cluster
 from sklearn.metrics import roc_auc_score
 
 from joblib import Parallel,delayed
-from sklearn.utils import axis0_safe_slice
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 
