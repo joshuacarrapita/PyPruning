@@ -37,11 +37,11 @@ def create_pruner(method = "reduced_error", **kwargs):
     elif method == "margin_distance":
         return GreedyPruningClassifier(metric=margin_distance,  **kwargs)
     elif method == "combined":
-        return MIQPPruningClassifier(single_metric=None, pairwise_metric=combined, alpha = 1.0)
+        return MIQPPruningClassifier(single_metric=None, pairwise_metric=combined, alpha = 1.0, **kwargs)
     elif method == "reference_vector":
         return RankPruningClassifier(metric=reference_vector,  **kwargs)
     elif method == "combined_error":
-        return MIQPPruningClassifier(single_metric=None, pairwise_metric=combined_error, alpha = 1.0)
+        return MIQPPruningClassifier(single_metric=None, pairwise_metric=combined_error, alpha = 1.0, **kwargs)
     elif method == "error_ambiguity":
         return RankPruningClassifier(metric=error_ambiguity,  **kwargs)
     elif method == "largest_mean_distance":
