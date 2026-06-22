@@ -82,20 +82,21 @@ def drep(i, ensemble_proba, selected_models, target, rho = 0.25):
     else:
         sub_ensemble = ensemble_proba[selected_models, :, :]
         sproba = sub_ensemble.mean(axis=0).argmax(axis=1)
+        sconf = sub_ensemble.mean(axis=0).max(axis=1)
         diffs = []
         for j in range(ensemble_proba.shape[0]):
             if j not in selected_models:
                 jproba = ensemble_proba[j,:,:].argmax(axis=1)
-                d = (jproba == sproba).sum()
+                agreement = 2 * (jproba == sproba) - 1
+                d = (agreement * sconf).mean()
                 diffs.append( (j,d) )
 
         gamma = sorted(diffs, key = lambda e: e[1], reverse=False)
         K = int(np.ceil(rho * len(gamma)))
-        topidx = [idx for idx in gamma[:K]]
+        topidx = [idx[0] for idx in gamma[:K]]
 
         if i in topidx:
-            iproba = ensemble_proba[i,:,:].argmax(axis=1)
-            pred = 1.0 / (1 + len(sub_ensemble)) * (sub_ensemble.sum(axis=0) + iproba)
+            pred = 1.0 / (1 + len(sub_ensemble)) * (sub_ensemble.sum(axis=0) + ensemble_proba[i,:,:])
             return (pred.argmax(axis=1) != target).mean() 
         else:
             return np.inf
