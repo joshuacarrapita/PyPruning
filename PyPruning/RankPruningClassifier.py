@@ -19,6 +19,7 @@ def individual_margin_diversity(i, ensemble_proba, target, alpha = 0.2):
     target = target.astype(int)
     iproba = ensemble_proba[i,:,:]
     n = iproba.shape[0]
+    M = ensemble_proba.shape[0]
 
     predictions = iproba.argmax(axis=1)
     V = np.zeros(ensemble_proba.shape)
@@ -32,31 +33,19 @@ def individual_margin_diversity(i, ensemble_proba, target, alpha = 0.2):
     for j in range(n):
         if (predictions[j] == target[j]):
             
-            # special case for margin: prediction for label with majority of votes
-            if(predictions[j] == np.argmax(V[j,:])):
-                # calculate margin with second highest number of votes
-                sortedArray = np.sort(np.copy(V[j,:]))
-                
-                # check whether 1. and 2. max vot counts are equal! (margin = 0)
-                if(sortedArray[-2] == np.max(V[j,:])):
-                    margin = (  V[j, target[j]]  - (sortedArray[-2] -1)   ) / n
-                else:
-                    margin = (  V[j, target[j]]  - sortedArray[-2]   ) / n
-                   
-            else:
-                # usual case for margin: prediction not label with majority of votes
-                margin = (  V[j, target[j]]  - np.max(V[j,:])   ) / n
+            v_y = V[j, target[j]]
+            v_not_y = np.max(np.delete(V[j, :], target[j]))
+            margin = (v_y - v_not_y) / M
             
-            
-            # somehow theres still a rare case for margin == 0
-            if(margin == 0):
-                margin = 0.01
+            # break ties based on ensemble size
+            if margin == 0:
+                margin = 1.0 / M
             
             fm = np.log(abs(margin))
-            fd = np.log(V[j, target[j]] / n)
+            fd = np.log(v_y / M)
             MDM = MDM + (alpha*fm) + ((1-alpha)*fd)
-    return - 1.0 * MDM
-
+    return MDM            
+            
 def individual_contribution(i, ensemble_proba, target):
     """
     Compute the individual contributions of each classifier wrt. the entire ensemble. Return the negative contribution due to the minimization.
