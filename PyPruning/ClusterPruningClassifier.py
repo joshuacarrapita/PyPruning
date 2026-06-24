@@ -42,9 +42,12 @@ def centroid_selector(X, assignments, target):
         Bakker, Bart, and Tom Heskes. "Clustering ensembles of neural network models." Neural networks 16.2 (2003): 261-269.
     """
     # TODO centroids are already known if kmeans was used, but agglomerative does not know / care about centroids
-    clf = NearestCentroid()
-    clf.fit(X, assignments)
-    centroids = clf.centroids_
+    if len(np.unique(assignments)) == 1:
+        centroids = np.mean(X, axis=0).reshape(1, -1)
+    else:
+        clf = NearestCentroid()
+        clf.fit(X, assignments)
+        centroids = clf.centroids_
 
     centroid_idx,_ = pairwise_distances_argmin_min(centroids, X)
 
