@@ -74,7 +74,7 @@ def cluster_accuracy(X, assignments, target, n_classes = None):
     preds = X.reshape(X.shape[0], int(X.shape[1]/n_classes), n_classes)
     for c, idx in idx_per_centroid.items():
         accs = [ (preds[i,:].argmax(axis=1) == target).mean() for i in idx ]
-        selected_idx.append(np.argmax(accs))
+        selected_idx.append(idx[np.argmax(accs)])
 
     return selected_idx
 
