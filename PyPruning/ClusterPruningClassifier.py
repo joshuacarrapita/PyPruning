@@ -43,7 +43,7 @@ def centroid_selector(X, assignments, target):
     """
     # TODO centroids are already known if kmeans was used, but agglomerative does not know / care about centroids
     if len(np.unique(assignments)) == 1:
-        centroids = np.mean(X, axis=0).reshape(1, -1)
+        centroids = np.mean(X, axis=0, dtype=np.float64).reshape(1, -1)
     else:
         clf = NearestCentroid()
         clf.fit(X, assignments)
